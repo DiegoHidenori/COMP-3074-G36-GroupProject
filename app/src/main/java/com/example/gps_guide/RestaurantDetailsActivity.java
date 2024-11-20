@@ -13,9 +13,12 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class RestaurantDetailsActivity extends AppCompatActivity {
 
+
+    // Request codes for startActivityForResult methods.
     private static final int EDIT_REQUEST_CODE = 2;
 
-    private TextView nameTextView, addressTextView, phoneTextView, descriptionTextView, tagsTextView;
+    private TextView nameTextView, addressTextView,
+            phoneTextView, descriptionTextView, tagsTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +26,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_restaurant_details);
+
 
         // Retrieve the passed data from the Intent
         Intent intent = getIntent();
@@ -60,7 +64,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         });
 
 
-        // For editing the restaurant
+        // Button for editing the restaurant.
         Button editBtn = findViewById(R.id.edit_button);
 
         editBtn.setOnClickListener(v -> {
@@ -70,14 +74,14 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
             Intent editIntent = new Intent(RestaurantDetailsActivity.this,
                     EditRestaurantActivity.class);
 
-            // Pass current restaurant details to the EditRestaurantActivity
+
+            // Intent to pass restaurant details to the EditRestaurantActivity.
             editIntent.putExtra("restaurantName", nameTextView.getText().toString());
             editIntent.putExtra("restaurantAddress", addressTextView.getText().toString());
             editIntent.putExtra("restaurantPhone", phoneTextView.getText().toString());
             editIntent.putExtra("restaurantDescription",
                     descriptionTextView.getText().toString());
             editIntent.putExtra("restaurantTags", tagsTextView.getText().toString());
-
             startActivityForResult(editIntent, EDIT_REQUEST_CODE);
 
         });
@@ -101,7 +105,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         if (requestCode == EDIT_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
 
 
-            // Update the UI with the edited details
+            // Updates the data with the updated details.
             String updatedName = data.getStringExtra("restaurantName");
             String updatedAddress = data.getStringExtra("restaurantAddress");
             String updatedPhone = data.getStringExtra("restaurantPhone");
@@ -116,7 +120,8 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
             descriptionTextView.setText(updatedDescription);
             tagsTextView.setText(updatedTags);
 
-            // Pass updated details back to the list
+
+            // Pass updated details back to the RestaurantListActivity.
             Intent resultIntent = new Intent();
             resultIntent.putExtra("restaurantName", updatedName);
             resultIntent.putExtra("restaurantAddress", updatedAddress);

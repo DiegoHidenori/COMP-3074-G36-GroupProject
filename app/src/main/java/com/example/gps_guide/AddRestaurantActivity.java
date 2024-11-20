@@ -21,7 +21,7 @@ public class AddRestaurantActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_restaurant);
 
 
-        // Get references to input fields and button
+        // Get the data form the xml file.
         EditText nameEditText = findViewById(R.id.input_name);
         EditText addressEditText = findViewById(R.id.input_address);
         EditText phoneEditText = findViewById(R.id.input_phone);
@@ -30,6 +30,8 @@ public class AddRestaurantActivity extends AppCompatActivity {
         Button saveButton = findViewById(R.id.save_button);
 
         saveButton.setOnClickListener(v -> {
+
+
             // Get user inputs
             String name = nameEditText.getText().toString();
             String address = addressEditText.getText().toString();
@@ -37,7 +39,8 @@ public class AddRestaurantActivity extends AppCompatActivity {
             String description = descriptionEditText.getText().toString();
             String tags = tagsEditText.getText().toString();
 
-            // Pass data back to RestaurantListActivity
+
+            // Intent to pass data back to RestaurantListActivity.
             Intent resultIntent = new Intent();
             resultIntent.putExtra("restaurantName", name);
             resultIntent.putExtra("restaurantAddress", address);
@@ -45,14 +48,17 @@ public class AddRestaurantActivity extends AppCompatActivity {
             resultIntent.putExtra("restaurantDescription", description);
             resultIntent.putExtra("restaurantTags", tags);
             setResult(RESULT_OK, resultIntent);
-            finish(); // Close this activity and return to the list
+            finish(); // Closes this activity and returns to the list.
+
         });
 
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+
         });
 
     }

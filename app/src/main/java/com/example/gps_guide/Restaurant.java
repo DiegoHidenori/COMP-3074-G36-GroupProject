@@ -12,11 +12,13 @@ public class Restaurant {
     public Restaurant() {}
 
     public Restaurant(String name, String address, String phone, String description, String tags) {
+
         this.name = name;
         this.address = address;
         this.phone = phone;
         this.description = description;
         this.tags = tags;
+
     }
 
     public String getAddress() {

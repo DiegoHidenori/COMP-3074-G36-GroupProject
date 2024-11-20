@@ -15,9 +15,11 @@ public class EditRestaurantActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_edit_restaurant);
+
 
         // Get references to input fields and button
         EditText nameEditText = findViewById(R.id.input_name);
@@ -27,7 +29,8 @@ public class EditRestaurantActivity extends AppCompatActivity {
         EditText tagsEditText = findViewById(R.id.input_tags);
         Button saveButton = findViewById(R.id.save_button);
 
-        // Retrieve current restaurant details from the intent
+
+        // Intent that retrieves the restaurant details from the details activity
         Intent intent = getIntent();
         String currentName = intent.getStringExtra("restaurantName");
         String currentAddress = intent.getStringExtra("restaurantAddress");
@@ -35,7 +38,8 @@ public class EditRestaurantActivity extends AppCompatActivity {
         String currentDescription = intent.getStringExtra("restaurantDescription");
         String currentTags = intent.getStringExtra("restaurantTags");
 
-        // Populate fields with current details
+
+        // Set fields with current details
         nameEditText.setText(currentName);
         addressEditText.setText(currentAddress);
         phoneEditText.setText(currentPhone);
@@ -44,6 +48,7 @@ public class EditRestaurantActivity extends AppCompatActivity {
 
         saveButton.setOnClickListener(v -> {
 
+
             // Get updated details from the input fields
             String updatedName = nameEditText.getText().toString();
             String updatedAddress = addressEditText.getText().toString();
@@ -51,7 +56,8 @@ public class EditRestaurantActivity extends AppCompatActivity {
             String updatedDescription = descriptionEditText.getText().toString();
             String updatedTags = tagsEditText.getText().toString();
 
-            // Pass updated details back to RestaurantDetailActivity
+
+            // Intent that passes updated details back to RestaurantDetailsActivity.
             Intent resultIntent = new Intent();
             resultIntent.putExtra("restaurantName", updatedName);
             resultIntent.putExtra("restaurantAddress", updatedAddress);
@@ -59,13 +65,16 @@ public class EditRestaurantActivity extends AppCompatActivity {
             resultIntent.putExtra("restaurantDescription", updatedDescription);
             resultIntent.putExtra("restaurantTags", updatedTags);
             setResult(RESULT_OK, resultIntent);
-            finish(); // Close EditRestaurantActivity and return
+            finish(); // Closes EditRestaurantActivity and returns to previous activity
+
         });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+
         });
 
     }

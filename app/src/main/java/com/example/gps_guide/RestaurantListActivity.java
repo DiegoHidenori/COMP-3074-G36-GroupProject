@@ -13,13 +13,18 @@ import java.util.List;
 
 public class RestaurantListActivity extends AppCompatActivity {
 
+
+    // Request codes for the intents used with the other files.
     private static final int DETAILS_REQUEST_CODE = 2; // Request code for details activity
     private static final int ADD_REQUEST_CODE = 1; // Request code for adding a restaurant
 
+
+    // Instance of the RestaurantAdapter for the display.
     private RestaurantAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_list);
 
@@ -52,7 +57,7 @@ public class RestaurantListActivity extends AppCompatActivity {
         ));
 
 
-        // Initializes the adapter and connects it to ListView.
+        // Initializes the adapter and connects it to ListView in the xml file.
         adapter = new RestaurantAdapter(this, restaurants);
         listView.setAdapter(adapter);
 
@@ -60,8 +65,12 @@ public class RestaurantListActivity extends AppCompatActivity {
         // When a restaurant is clicked...
         listView.setOnItemClickListener((parent, view, position, id) -> {
 
+
+            // Get the selected restaurant object
             Restaurant selectedRestaurant = (Restaurant) parent.getItemAtPosition(position);
 
+
+            // Create an intent that passes data to the details activity.
             Intent intent = new Intent(RestaurantListActivity.this,
                     RestaurantDetailsActivity.class);
             intent.putExtra("restaurantName", selectedRestaurant.getName());
@@ -74,32 +83,45 @@ public class RestaurantListActivity extends AppCompatActivity {
 
         });
 
-        // When Add Restaurant button is clicked...
+
+        // Takes you to the AddRestaurantActivity
         addRestaurantBtn.setOnClickListener(v -> {
+
             Intent intent = new Intent(RestaurantListActivity.this, AddRestaurantActivity.class);
             startActivityForResult(intent, ADD_REQUEST_CODE); // Request code 1
+
         });
 
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
-            // Retrieve the new restaurant details from the intent
+        if (requestCode == ADD_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+
+
+            // Retrieve the new restaurant details from the AddRestaurantActivity.
             String name = data.getStringExtra("restaurantName");
             String address = data.getStringExtra("restaurantAddress");
             String phone = data.getStringExtra("restaurantPhone");
             String description = data.getStringExtra("restaurantDescription");
             String tags = data.getStringExtra("restaurantTags");
 
+
             // Create a new Restaurant object and add it to the adapter
             Restaurant newRestaurant = new Restaurant(name, address, phone, description, tags);
-            adapter.add(newRestaurant); // Update the list in real-time
+
+
+            // Update the list in real-time
+            adapter.add(newRestaurant);
+
         }
         else if (requestCode == DETAILS_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-            // Get updated restaurant details from the intent
+
+
+            // Get updated restaurant details from the RestaurantDetailsActivity.
             String updatedName = data.getStringExtra("restaurantName");
             String updatedAddress = data.getStringExtra("restaurantAddress");
             String updatedPhone = data.getStringExtra("restaurantPhone");
@@ -108,11 +130,15 @@ public class RestaurantListActivity extends AppCompatActivity {
             int position = data.getIntExtra("restaurantPosition", -1);
 
             if (position != -1) {
+
+
                 // Update the restaurant in the adapter
-                Restaurant updatedRestaurant = new Restaurant(updatedName, updatedAddress, updatedPhone, updatedDescription, updatedTags);
+                Restaurant updatedRestaurant = new Restaurant(updatedName,
+                        updatedAddress, updatedPhone, updatedDescription, updatedTags);
                 adapter.remove(adapter.getItem(position)); // Remove the old restaurant
                 adapter.insert(updatedRestaurant, position); // Insert the updated restaurant
                 adapter.notifyDataSetChanged(); // Refresh the list
+
             }
         }
     }
