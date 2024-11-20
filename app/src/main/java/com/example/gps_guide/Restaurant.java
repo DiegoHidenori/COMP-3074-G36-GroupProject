@@ -8,16 +8,19 @@ public class Restaurant {
     private String phone;
     private String description;
     private String tags;
+    private float rating;
 
     public Restaurant() {}
 
-    public Restaurant(String name, String address, String phone, String description, String tags) {
+    public Restaurant(String name, String address, String phone, String description,
+                      String tags, float rating) {
 
         this.name = name;
         this.address = address;
         this.phone = phone;
         this.description = description;
         this.tags = tags;
+        this.rating = rating;
 
     }
 
@@ -59,5 +62,13 @@ public class Restaurant {
 
     public void setTags(String tags) {
         this.tags = tags;
+    }
+
+    public float getRating() {
+        return rating;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
     }
 }

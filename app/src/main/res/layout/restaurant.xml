@@ -20,6 +20,15 @@
         android:text="Address: "
         android:textSize="14sp" />
 
+    <RatingBar
+        android:id="@+id/rating_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="5"
+        android:stepSize="0.5"
+        android:isIndicator="true"
+        android:layout_gravity="center_vertical" />
+
     <TextView
         android:id="@+id/tags_txt_view"
         android:layout_width="wrap_content"

@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.util.List;
@@ -31,10 +32,16 @@ public class RestaurantAdapter extends ArrayAdapter<Restaurant> {
         TextView nameTextView = convertView.findViewById(R.id.name_txt_view);
         TextView addressTextView = convertView.findViewById(R.id.address_txt_view);
         TextView tagsTextView = convertView.findViewById(R.id.tags_txt_view);
+        RatingBar ratingBar = convertView.findViewById(R.id.rating_bar);
 
-        nameTextView.setText(restaurant.getName());
-        addressTextView.setText(restaurant.getAddress());
-        tagsTextView.setText(String.format("Tags: '%s'", restaurant.getTags()));
+        if (restaurant != null) {
+
+            nameTextView.setText(restaurant.getName());
+            addressTextView.setText(restaurant.getAddress());
+            ratingBar.setRating(restaurant.getRating());
+            tagsTextView.setText(String.format("Tags: '%s'", restaurant.getTags()));
+
+        }
 
         return convertView;
 

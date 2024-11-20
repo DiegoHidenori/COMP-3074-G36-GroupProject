@@ -3,6 +3,7 @@ package com.example.gps_guide;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -17,8 +18,12 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
     // Request codes for startActivityForResult methods.
     private static final int EDIT_REQUEST_CODE = 2;
 
+
+    // The global variables to store the restaurant data.
     private TextView nameTextView, addressTextView,
             phoneTextView, descriptionTextView, tagsTextView;
+    private RatingBar ratingBar;
+    private float currentRating;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +40,8 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         String phone = intent.getStringExtra("restaurantPhone");
         String description = intent.getStringExtra("restaurantDescription");
         String tags = intent.getStringExtra("restaurantTags");
-
         int position = intent.getIntExtra("restaurantPosition", -1);
+        currentRating = intent.getFloatExtra("restaurantRating", 0);
 
 
         // Set the texts from the RestaurantDetailsActivity
@@ -45,18 +50,43 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         phoneTextView = findViewById(R.id.detail_phone);
         descriptionTextView = findViewById(R.id.detail_description);
         tagsTextView = findViewById(R.id.detail_tags);
+        ratingBar = findViewById(R.id.rating_bar);
 
         nameTextView.setText(name);
         addressTextView.setText(address);
         phoneTextView.setText(phone);
         descriptionTextView.setText(description);
         tagsTextView.setText(tags);
+        ratingBar.setRating(currentRating);
+
+        ratingBar.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
+
+            if (fromUser) {
+
+                currentRating = rating;
+
+            }
+
+        });
 
 
         // Button to go back to Restaurant list
         Button btn = findViewById(R.id.go_to_list_btn);
 
         btn.setOnClickListener(view -> {
+
+
+            // To pass rating to the RestaurantListActivity.
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("restaurantName", nameTextView.getText().toString());
+            resultIntent.putExtra("restaurantAddress", addressTextView.getText().toString());
+            resultIntent.putExtra("restaurantPhone", phoneTextView.getText().toString());
+            resultIntent.putExtra("restaurantDescription", descriptionTextView.getText().toString());
+            resultIntent.putExtra("restaurantTags", tagsTextView.getText().toString());
+            resultIntent.putExtra("restaurantRating", ratingBar.getRating());
+            resultIntent.putExtra("restaurantPosition",
+                    getIntent().getIntExtra("restaurantPosition", -1));
+            setResult(RESULT_OK, resultIntent);
 
 
             // finish() method ends the current activity and removes it from the stack. It then

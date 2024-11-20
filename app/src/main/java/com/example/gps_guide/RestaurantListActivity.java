@@ -40,21 +40,24 @@ public class RestaurantListActivity extends AppCompatActivity {
                 "123 Main St",
                 "123-456-7890",
                 "Fine dining experience.",
-                "Testing, test")
-        );
+                "Testing, test",
+                0
+        ));
         restaurants.add(new Restaurant(
                 "Burger Haven",
                 "456 Elm St",
                 "987-654-3210",
                 "Best burgers in town.",
-                "Lala")
-        );
+                "Lala",
+                0
+        ));
         restaurants.add(new Restaurant(
                 "Sushi World",
                 "789 Maple Ave",
                 "555-789-1234",
                 "Authentic Japanese sushi.",
-                "Sushi, Japanese"
+                "Sushi, Japanese",
+                0
         ));
 
 
@@ -79,6 +82,7 @@ public class RestaurantListActivity extends AppCompatActivity {
             intent.putExtra("restaurantPhone", selectedRestaurant.getPhone());
             intent.putExtra("restaurantDescription", selectedRestaurant.getDescription());
             intent.putExtra("restaurantTags", selectedRestaurant.getTags());
+            intent.putExtra("restaurantRating", selectedRestaurant.getRating());
             intent.putExtra("restaurantPosition", position);
             startActivityForResult(intent, DETAILS_REQUEST_CODE);
 
@@ -117,17 +121,18 @@ public class RestaurantListActivity extends AppCompatActivity {
             String phone = data.getStringExtra("restaurantPhone");
             String description = data.getStringExtra("restaurantDescription");
             String tags = data.getStringExtra("restaurantTags");
+            float rating = data.getFloatExtra("restaurantRating", 0);
 
 
             // Create a new Restaurant object and add it to the adapter
-            Restaurant newRestaurant = new Restaurant(name, address, phone, description, tags);
+            Restaurant newRestaurant = new Restaurant(name, address, phone, description,
+                    tags, rating);
 
 
             // Update the list in real-time
             adapter.add(newRestaurant);
 
-        }
-        else if (requestCode == DETAILS_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+        } else if (requestCode == DETAILS_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
 
 
             // Checks if have to delete
@@ -140,23 +145,43 @@ public class RestaurantListActivity extends AppCompatActivity {
                 adapter.notifyDataSetChanged(); // To refresh the list
 
             } else {
-                // Get updated restaurant details from the RestaurantDetailsActivity.
-                String updatedName = data.getStringExtra("restaurantName");
-                String updatedAddress = data.getStringExtra("restaurantAddress");
-                String updatedPhone = data.getStringExtra("restaurantPhone");
-                String updatedDescription = data.getStringExtra("restaurantDescription");
-                String updatedTags = data.getStringExtra("restaurantTags");
+
                 int position = data.getIntExtra("restaurantPosition", -1);
+                // Get updated restaurant details from the RestaurantDetailsActivity.
+//                String updatedName = data.getStringExtra("restaurantName");
+//                String updatedAddress = data.getStringExtra("restaurantAddress");
+//                String updatedPhone = data.getStringExtra("restaurantPhone");
+//                String updatedDescription = data.getStringExtra("restaurantDescription");
+//                String updatedTags = data.getStringExtra("restaurantTags");
+//                int position = data.getIntExtra("restaurantPosition", -1);
+//                float updatedRating = data.getFloatExtra("restaurantRating", 0);
 
                 if (position != -1) {
 
 
                     // Update the restaurant in the adapter
-                    Restaurant updatedRestaurant = new Restaurant(updatedName,
-                            updatedAddress, updatedPhone, updatedDescription, updatedTags);
-                    adapter.remove(adapter.getItem(position)); // Remove the old restaurant
-                    adapter.insert(updatedRestaurant, position); // Insert the updated restaurant
-                    adapter.notifyDataSetChanged(); // Refresh the list
+//                    Restaurant updatedRestaurant = new Restaurant(updatedName, updatedAddress,
+//                            updatedPhone, updatedDescription, updatedTags, updatedRating);
+//                    adapter.remove(adapter.getItem(position)); // Remove the old restaurant
+//                    adapter.insert(updatedRestaurant, position); // Insert the updated restaurant
+//                    adapter.notifyDataSetChanged(); // Refresh the list
+
+                    Restaurant restaurant = adapter.getItem(position);
+
+                    if (restaurant != null) {
+
+                        // Update the existing restaurant object
+                        restaurant.setName(data.getStringExtra("restaurantName"));
+                        restaurant.setAddress(data.getStringExtra("restaurantAddress"));
+                        restaurant.setPhone(data.getStringExtra("restaurantPhone"));
+                        restaurant.setDescription(data.getStringExtra("restaurantDescription"));
+                        restaurant.setTags(data.getStringExtra("restaurantTags"));
+                        restaurant.setRating(data.getFloatExtra("restaurantRating", 0));
+
+                        // Notify the adapter that the data has changed
+                        adapter.notifyDataSetChanged();
+
+                    }
 
                 }
             }

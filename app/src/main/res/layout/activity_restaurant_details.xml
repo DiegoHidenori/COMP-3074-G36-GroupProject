@@ -29,6 +29,21 @@
             android:paddingBottom="8dp" />
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rate this: "
+            android:layout_gravity="center_horizontal" />
+
+        <RatingBar
+            android:id="@+id/rating_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:stepSize="1"
+            android:rating="0"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
             android:id="@+id/detail_phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
