@@ -130,24 +130,35 @@ public class RestaurantListActivity extends AppCompatActivity {
         else if (requestCode == DETAILS_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
 
 
-            // Get updated restaurant details from the RestaurantDetailsActivity.
-            String updatedName = data.getStringExtra("restaurantName");
-            String updatedAddress = data.getStringExtra("restaurantAddress");
-            String updatedPhone = data.getStringExtra("restaurantPhone");
-            String updatedDescription = data.getStringExtra("restaurantDescription");
-            String updatedTags = data.getStringExtra("restaurantTags");
-            int position = data.getIntExtra("restaurantPosition", -1);
-
-            if (position != -1) {
+            // Checks if have to delete
+            int deletePos = data.getIntExtra("deletePosition", -1);
+            if (deletePos != -1) {
 
 
-                // Update the restaurant in the adapter
-                Restaurant updatedRestaurant = new Restaurant(updatedName,
-                        updatedAddress, updatedPhone, updatedDescription, updatedTags);
-                adapter.remove(adapter.getItem(position)); // Remove the old restaurant
-                adapter.insert(updatedRestaurant, position); // Insert the updated restaurant
-                adapter.notifyDataSetChanged(); // Refresh the list
+                // Delete restaurant from the specified position
+                adapter.remove(adapter.getItem(deletePos));
+                adapter.notifyDataSetChanged(); // To refresh the list
 
+            } else {
+                // Get updated restaurant details from the RestaurantDetailsActivity.
+                String updatedName = data.getStringExtra("restaurantName");
+                String updatedAddress = data.getStringExtra("restaurantAddress");
+                String updatedPhone = data.getStringExtra("restaurantPhone");
+                String updatedDescription = data.getStringExtra("restaurantDescription");
+                String updatedTags = data.getStringExtra("restaurantTags");
+                int position = data.getIntExtra("restaurantPosition", -1);
+
+                if (position != -1) {
+
+
+                    // Update the restaurant in the adapter
+                    Restaurant updatedRestaurant = new Restaurant(updatedName,
+                            updatedAddress, updatedPhone, updatedDescription, updatedTags);
+                    adapter.remove(adapter.getItem(position)); // Remove the old restaurant
+                    adapter.insert(updatedRestaurant, position); // Insert the updated restaurant
+                    adapter.notifyDataSetChanged(); // Refresh the list
+
+                }
             }
         }
     }

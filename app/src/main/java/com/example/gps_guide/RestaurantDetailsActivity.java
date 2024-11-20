@@ -36,6 +36,8 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         String description = intent.getStringExtra("restaurantDescription");
         String tags = intent.getStringExtra("restaurantTags");
 
+        int position = intent.getIntExtra("restaurantPosition", -1);
+
 
         // Set the texts from the RestaurantDetailsActivity
         nameTextView = findViewById(R.id.detail_name);
@@ -83,6 +85,19 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
                     descriptionTextView.getText().toString());
             editIntent.putExtra("restaurantTags", tagsTextView.getText().toString());
             startActivityForResult(editIntent, EDIT_REQUEST_CODE);
+
+        });
+
+
+        Button deleteBtn = findViewById(R.id.delete_button);
+        deleteBtn.setOnClickListener(view -> {
+
+
+            // Pass position of the restaurant to know which to delete in the list.
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("deletePosition", position);
+            setResult(RESULT_OK, resultIntent);
+            finish();
 
         });
 
