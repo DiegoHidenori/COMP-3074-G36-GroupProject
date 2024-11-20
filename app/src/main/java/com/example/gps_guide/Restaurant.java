@@ -9,11 +9,13 @@ public class Restaurant {
     private String description;
     private String tags;
     private float rating;
+    private double latitude;
+    private double longitude;
 
     public Restaurant() {}
 
     public Restaurant(String name, String address, String phone, String description,
-                      String tags, float rating) {
+                      String tags, float rating, double latitude, double longitude) {
 
         this.name = name;
         this.address = address;
@@ -21,6 +23,8 @@ public class Restaurant {
         this.description = description;
         this.tags = tags;
         this.rating = rating;
+        this.latitude = latitude;
+        this.longitude = longitude;
 
     }
 
@@ -70,5 +74,21 @@ public class Restaurant {
 
     public void setRating(float rating) {
         this.rating = rating;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 }

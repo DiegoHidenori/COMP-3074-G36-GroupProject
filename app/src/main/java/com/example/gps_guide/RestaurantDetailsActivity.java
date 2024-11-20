@@ -12,6 +12,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 public class RestaurantDetailsActivity extends AppCompatActivity {
 
 
@@ -24,6 +31,13 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
             phoneTextView, descriptionTextView, tagsTextView;
     private RatingBar ratingBar;
     private float currentRating;
+
+
+    // Map functionality
+    private MapView mapView;
+    private GoogleMap googleMap;
+    private double latitude;
+    private double longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +56,24 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         String tags = intent.getStringExtra("restaurantTags");
         int position = intent.getIntExtra("restaurantPosition", -1);
         currentRating = intent.getFloatExtra("restaurantRating", 0);
+        latitude = intent.getDoubleExtra("restaurantLatitude", 0.0);
+        longitude = intent.getDoubleExtra("restaurantLongitude", 0.0);
+
+
+        // Initialize MapView
+        mapView = findViewById(R.id.map_view);
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync(googleMap -> {
+            this.googleMap = googleMap;
+            MapsInitializer.initialize(this);
+
+
+            // Marker for the location
+            LatLng restaurantLocation = new LatLng(latitude, longitude);
+            googleMap.addMarker(new MarkerOptions().position(restaurantLocation).title(name));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(restaurantLocation, 15));
+
+        });
 
 
         // Set the texts from the RestaurantDetailsActivity
@@ -180,4 +212,27 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
 }

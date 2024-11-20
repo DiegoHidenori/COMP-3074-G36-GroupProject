@@ -41,7 +41,9 @@ public class RestaurantListActivity extends AppCompatActivity {
                 "123-456-7890",
                 "Fine dining experience.",
                 "Testing, test",
-                0
+                0,
+                43.6543,
+                -79.3832
         ));
         restaurants.add(new Restaurant(
                 "Burger Haven",
@@ -49,7 +51,9 @@ public class RestaurantListActivity extends AppCompatActivity {
                 "987-654-3210",
                 "Best burgers in town.",
                 "Lala",
-                0
+                0,
+                43.7000,
+                -79.4000
         ));
         restaurants.add(new Restaurant(
                 "Sushi World",
@@ -57,7 +61,9 @@ public class RestaurantListActivity extends AppCompatActivity {
                 "555-789-1234",
                 "Authentic Japanese sushi.",
                 "Sushi, Japanese",
-                0
+                0,
+                43.6617,
+                -79.3900
         ));
 
 
@@ -84,6 +90,8 @@ public class RestaurantListActivity extends AppCompatActivity {
             intent.putExtra("restaurantTags", selectedRestaurant.getTags());
             intent.putExtra("restaurantRating", selectedRestaurant.getRating());
             intent.putExtra("restaurantPosition", position);
+            intent.putExtra("restaurantLatitude", selectedRestaurant.getLatitude());
+            intent.putExtra("restaurantLongitude", selectedRestaurant.getLongitude());
             startActivityForResult(intent, DETAILS_REQUEST_CODE);
 
         });
@@ -122,11 +130,13 @@ public class RestaurantListActivity extends AppCompatActivity {
             String description = data.getStringExtra("restaurantDescription");
             String tags = data.getStringExtra("restaurantTags");
             float rating = data.getFloatExtra("restaurantRating", 0);
+            double latitude = data.getDoubleExtra("restaurantLatitude", 0);
+            double longitude = data.getDoubleExtra("restaurantLongitude", 0);
 
 
             // Create a new Restaurant object and add it to the adapter
             Restaurant newRestaurant = new Restaurant(name, address, phone, description,
-                    tags, rating);
+                    tags, rating, latitude, longitude);
 
 
             // Update the list in real-time
@@ -177,6 +187,8 @@ public class RestaurantListActivity extends AppCompatActivity {
                         restaurant.setDescription(data.getStringExtra("restaurantDescription"));
                         restaurant.setTags(data.getStringExtra("restaurantTags"));
                         restaurant.setRating(data.getFloatExtra("restaurantRating", 0));
+                        restaurant.setLatitude(data.getDoubleExtra("restaurantLatitude", 0));
+                        restaurant.setLongitude(data.getDoubleExtra("restaurantLongitude", 0));
 
                         // Notify the adapter that the data has changed
                         adapter.notifyDataSetChanged();
