@@ -30,6 +30,7 @@ public class RestaurantListActivity extends AppCompatActivity {
 
         ListView listView = findViewById(R.id.restaurant_list_view);
         Button addRestaurantBtn = findViewById(R.id.add_restaurant_btn);
+        Button goAboutBtn = findViewById(R.id.go_to_about_btn);
 
 
         // Initial list with dummy data.
@@ -89,6 +90,14 @@ public class RestaurantListActivity extends AppCompatActivity {
 
             Intent intent = new Intent(RestaurantListActivity.this, AddRestaurantActivity.class);
             startActivityForResult(intent, ADD_REQUEST_CODE); // Request code 1
+
+        });
+
+
+        goAboutBtn.setOnClickListener(view -> {
+
+            Intent intent = new Intent(RestaurantListActivity.this, AboutActivity.class);
+            startActivity(intent);
 
         });
 
