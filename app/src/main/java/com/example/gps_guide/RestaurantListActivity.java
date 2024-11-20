@@ -38,7 +38,9 @@ public class RestaurantListActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener((parent, view, position, id) -> {
+
             Restaurant selectedRestaurant = (Restaurant) parent.getItemAtPosition(position);
+
             Intent intent = new Intent(RestaurantListActivity.this,
                     RestaurantDetailsActivity.class);
             intent.putExtra("restaurantName", selectedRestaurant.getName());
@@ -47,6 +49,7 @@ public class RestaurantListActivity extends AppCompatActivity {
             intent.putExtra("restaurantDescription", selectedRestaurant.getDescription());
             intent.putExtra("restaurantTags", selectedRestaurant.getTags());
             startActivity(intent);
+
         });
     }
 }
