@@ -13,6 +13,9 @@ import java.util.List;
 
 public class RestaurantListActivity extends AppCompatActivity {
 
+    private static final int DETAILS_REQUEST_CODE = 2; // Request code for details activity
+    private static final int ADD_REQUEST_CODE = 1; // Request code for adding a restaurant
+
     private RestaurantAdapter adapter;
 
     @Override
@@ -23,6 +26,8 @@ public class RestaurantListActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.restaurant_list_view);
         Button addRestaurantBtn = findViewById(R.id.add_restaurant_btn);
 
+
+        // Initial list with dummy data.
         List<Restaurant> restaurants = new ArrayList<>();
         restaurants.add(new Restaurant(
                 "The Fancy Fork",
@@ -46,9 +51,13 @@ public class RestaurantListActivity extends AppCompatActivity {
                 "Sushi, Japanese"
         ));
 
+
+        // Initializes the adapter and connects it to ListView.
         adapter = new RestaurantAdapter(this, restaurants);
         listView.setAdapter(adapter);
 
+
+        // When a restaurant is clicked...
         listView.setOnItemClickListener((parent, view, position, id) -> {
 
             Restaurant selectedRestaurant = (Restaurant) parent.getItemAtPosition(position);
@@ -60,14 +69,15 @@ public class RestaurantListActivity extends AppCompatActivity {
             intent.putExtra("restaurantPhone", selectedRestaurant.getPhone());
             intent.putExtra("restaurantDescription", selectedRestaurant.getDescription());
             intent.putExtra("restaurantTags", selectedRestaurant.getTags());
-            startActivity(intent);
+            intent.putExtra("restaurantPosition", position);
+            startActivityForResult(intent, DETAILS_REQUEST_CODE);
 
         });
 
-        // Handle Add Restaurant button click
+        // When Add Restaurant button is clicked...
         addRestaurantBtn.setOnClickListener(v -> {
             Intent intent = new Intent(RestaurantListActivity.this, AddRestaurantActivity.class);
-            startActivityForResult(intent, 1); // Request code 1
+            startActivityForResult(intent, ADD_REQUEST_CODE); // Request code 1
         });
 
     }
@@ -87,6 +97,23 @@ public class RestaurantListActivity extends AppCompatActivity {
             // Create a new Restaurant object and add it to the adapter
             Restaurant newRestaurant = new Restaurant(name, address, phone, description, tags);
             adapter.add(newRestaurant); // Update the list in real-time
+        }
+        else if (requestCode == DETAILS_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            // Get updated restaurant details from the intent
+            String updatedName = data.getStringExtra("restaurantName");
+            String updatedAddress = data.getStringExtra("restaurantAddress");
+            String updatedPhone = data.getStringExtra("restaurantPhone");
+            String updatedDescription = data.getStringExtra("restaurantDescription");
+            String updatedTags = data.getStringExtra("restaurantTags");
+            int position = data.getIntExtra("restaurantPosition", -1);
+
+            if (position != -1) {
+                // Update the restaurant in the adapter
+                Restaurant updatedRestaurant = new Restaurant(updatedName, updatedAddress, updatedPhone, updatedDescription, updatedTags);
+                adapter.remove(adapter.getItem(position)); // Remove the old restaurant
+                adapter.insert(updatedRestaurant, position); // Insert the updated restaurant
+                adapter.notifyDataSetChanged(); // Refresh the list
+            }
         }
     }
 
