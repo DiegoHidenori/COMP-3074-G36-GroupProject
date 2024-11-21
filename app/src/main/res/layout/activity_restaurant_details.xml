@@ -70,6 +70,12 @@
             android:layout_height="150dp" />
 
         <Button
+            android:id="@+id/view_full_map_btn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Full Map" />
+
+        <Button
             android:id="@+id/directions_btn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

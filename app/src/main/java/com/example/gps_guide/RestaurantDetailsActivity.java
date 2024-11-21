@@ -166,6 +166,20 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         });
 
 
+        // Button for full map
+        Button fullMapButton = findViewById(R.id.view_full_map_btn);
+
+        fullMapButton.setOnClickListener(v -> {
+
+            Intent mapIntent = new Intent(RestaurantDetailsActivity.this, FullMapActivity.class);
+            mapIntent.putExtra("restaurantLatitude", latitude);
+            mapIntent.putExtra("restaurantLongitude", longitude);
+            mapIntent.putExtra("restaurantName", nameTextView.getText().toString());
+            startActivity(mapIntent);
+
+        });
+
+
         // Button for directions functionality.
         Button directionsButton = findViewById(R.id.directions_btn);
 
