@@ -1,10 +1,12 @@
 package com.example.gps_guide;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -162,6 +164,35 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
             finish();
 
         });
+
+
+        // Button for directions functionality.
+        Button directionsButton = findViewById(R.id.directions_btn);
+
+        directionsButton.setOnClickListener(v -> {
+
+            // Get the latitude and longitude of the restaurant
+            double latitude = getIntent().getDoubleExtra("restaurantLatitude", 0.0);
+            double longitude = getIntent().getDoubleExtra("restaurantLongitude", 0.0);
+
+            // Create the Google Maps navigation URI
+            String uri = String.format("google.navigation:q=%f,%f", latitude, longitude);
+
+            // Create an Intent to open Google Maps
+            Intent directionsIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+            directionsIntent.setPackage("com.google.android.apps.maps");
+
+            // Verify Google Maps is installed before starting the activity
+            if (directionsIntent.resolveActivity(getPackageManager()) != null) {
+                startActivity(directionsIntent);
+            } else {
+                Toast.makeText(this, "Google Maps is not installed", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
+
+
 
 
         // Handles edge-to-edge window insets?
