@@ -10,16 +10,12 @@ import android.widget.TextView;
 
 import java.util.List;
 
-
-// The adapter is to manage how the Restaurant objects are displayed in the ListView.
 public class RestaurantAdapter extends ArrayAdapter<Restaurant> {
 
     public RestaurantAdapter(Context context, List<Restaurant> restaurants) {
         super(context, 0, restaurants);
     }
 
-
-    // getView() is where you choose what to display.
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 

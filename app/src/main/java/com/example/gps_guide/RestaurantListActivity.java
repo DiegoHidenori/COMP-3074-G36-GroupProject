@@ -71,16 +71,12 @@ public class RestaurantListActivity extends AppCompatActivity {
         adapter = new RestaurantAdapter(this, restaurants);
         listView.setAdapter(adapter);
 
-
-        // When a restaurant is clicked...
         listView.setOnItemClickListener((parent, view, position, id) -> {
 
-
-            // Get the selected restaurant object
             Restaurant selectedRestaurant = (Restaurant) parent.getItemAtPosition(position);
 
 
-            // Create an intent that passes data to the details activity.
+            // Passes data to the details activity.
             Intent intent = new Intent(RestaurantListActivity.this,
                     RestaurantDetailsActivity.class);
             intent.putExtra("restaurantName", selectedRestaurant.getName());
@@ -96,15 +92,12 @@ public class RestaurantListActivity extends AppCompatActivity {
 
         });
 
-
-        // Takes you to the AddRestaurantActivity
         addRestaurantBtn.setOnClickListener(v -> {
 
             Intent intent = new Intent(RestaurantListActivity.this, AddRestaurantActivity.class);
             startActivityForResult(intent, ADD_REQUEST_CODE); // Request code 1
 
         });
-
 
         goAboutBtn.setOnClickListener(view -> {
 
@@ -133,26 +126,17 @@ public class RestaurantListActivity extends AppCompatActivity {
             double latitude = data.getDoubleExtra("restaurantLatitude", 0);
             double longitude = data.getDoubleExtra("restaurantLongitude", 0);
 
-
-            // Create a new Restaurant object and add it to the adapter
             Restaurant newRestaurant = new Restaurant(name, address, phone, description,
                     tags, rating, latitude, longitude);
-
-
-            // Update the list in real-time
             adapter.add(newRestaurant);
 
         } else if (requestCode == DETAILS_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
 
-
-            // Checks if have to delete
             int deletePos = data.getIntExtra("deletePosition", -1);
             if (deletePos != -1) {
 
-
-                // Delete restaurant from the specified position
                 adapter.remove(adapter.getItem(deletePos));
-                adapter.notifyDataSetChanged(); // To refresh the list
+                adapter.notifyDataSetChanged();
 
             } else {
 
@@ -189,8 +173,6 @@ public class RestaurantListActivity extends AppCompatActivity {
                         restaurant.setRating(data.getFloatExtra("restaurantRating", 0));
                         restaurant.setLatitude(data.getDoubleExtra("restaurantLatitude", 0));
                         restaurant.setLongitude(data.getDoubleExtra("restaurantLongitude", 0));
-
-                        // Notify the adapter that the data has changed
                         adapter.notifyDataSetChanged();
 
                     }

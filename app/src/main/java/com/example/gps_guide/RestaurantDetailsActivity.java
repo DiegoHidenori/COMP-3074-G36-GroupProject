@@ -23,19 +23,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class RestaurantDetailsActivity extends AppCompatActivity {
 
-
-    // Request codes for startActivityForResult methods.
     private static final int EDIT_REQUEST_CODE = 2;
 
-
-    // The global variables to store the restaurant data.
     private TextView nameTextView, addressTextView,
             phoneTextView, descriptionTextView, tagsTextView;
     private RatingBar ratingBar;
     private float currentRating;
-
-
-    // Map functionality
     private MapView mapView;
     private GoogleMap googleMap;
     private double latitude;
@@ -49,7 +42,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_restaurant_details);
 
 
-        // Retrieve the passed data from the Intent
+        // Retrieve the passed data from RestaurantListActivity.
         Intent intent = getIntent();
         String name = intent.getStringExtra("restaurantName");
         String address = intent.getStringExtra("restaurantAddress");
@@ -61,8 +54,6 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         latitude = intent.getDoubleExtra("restaurantLatitude", 0.0);
         longitude = intent.getDoubleExtra("restaurantLongitude", 0.0);
 
-
-        // Initialize MapView
         mapView = findViewById(R.id.map_view);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(googleMap -> {
@@ -78,7 +69,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         });
 
 
-        // Set the texts from the RestaurantDetailsActivity
+        // Texts from the RestaurantDetailsActivity.
         nameTextView = findViewById(R.id.detail_name);
         addressTextView = findViewById(R.id.detail_address);
         phoneTextView = findViewById(R.id.detail_phone);
@@ -103,8 +94,6 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
 
         });
 
-
-        // Button to go back to Restaurant list
         Button btn = findViewById(R.id.go_to_list_btn);
 
         btn.setOnClickListener(view -> {
@@ -129,14 +118,10 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
 
         });
 
-
-        // Button for editing the restaurant.
         Button editBtn = findViewById(R.id.edit_button);
 
         editBtn.setOnClickListener(v -> {
 
-
-            // Launches the EditRestaurantActivity and passes the details with an Intent.
             Intent editIntent = new Intent(RestaurantDetailsActivity.this,
                     EditRestaurantActivity.class);
 
@@ -152,12 +137,10 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
 
         });
 
-
         Button deleteBtn = findViewById(R.id.delete_button);
+
         deleteBtn.setOnClickListener(view -> {
 
-
-            // Pass position of the restaurant to know which to delete in the list.
             Intent resultIntent = new Intent();
             resultIntent.putExtra("deletePosition", position);
             setResult(RESULT_OK, resultIntent);
@@ -165,8 +148,6 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
 
         });
 
-
-        // Button for full map
         Button fullMapButton = findViewById(R.id.view_full_map_btn);
 
         fullMapButton.setOnClickListener(v -> {
@@ -179,37 +160,27 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
 
         });
 
-
-        // Button for directions functionality.
         Button directionsButton = findViewById(R.id.directions_btn);
 
         directionsButton.setOnClickListener(v -> {
 
-            // Get the latitude and longitude of the restaurant
-            double latitude = getIntent().getDoubleExtra("restaurantLatitude", 0.0);
-            double longitude = getIntent().getDoubleExtra("restaurantLongitude", 0.0);
-
-            // Create the Google Maps navigation URI
+            double latitude = getIntent().getDoubleExtra("restaurantLatitude",
+                    0.0);
+            double longitude = getIntent().getDoubleExtra("restaurantLongitude",
+                    0.0);
             String uri = String.format("google.navigation:q=%f,%f", latitude, longitude);
-
-            // Create an Intent to open Google Maps
             Intent directionsIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
             directionsIntent.setPackage("com.google.android.apps.maps");
 
-            // Verify Google Maps is installed before starting the activity
             if (directionsIntent.resolveActivity(getPackageManager()) != null) {
                 startActivity(directionsIntent);
             } else {
-                Toast.makeText(this, "Google Maps is not installed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Google Maps is not installed",
+                        Toast.LENGTH_SHORT).show();
             }
 
         });
 
-
-
-
-
-        // Handles edge-to-edge window insets?
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
 
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -226,16 +197,12 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
 
         if (requestCode == EDIT_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
 
-
-            // Updates the data with the updated details.
             String updatedName = data.getStringExtra("restaurantName");
             String updatedAddress = data.getStringExtra("restaurantAddress");
             String updatedPhone = data.getStringExtra("restaurantPhone");
             String updatedDescription = data.getStringExtra("restaurantDescription");
             String updatedTags = data.getStringExtra("restaurantTags");
 
-
-            // Updates the restaurant with the new details
             nameTextView.setText(updatedName);
             addressTextView.setText(updatedAddress);
             phoneTextView.setText(updatedPhone);
