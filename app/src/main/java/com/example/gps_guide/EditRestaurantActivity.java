@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,7 +12,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.gps_guide.data.RestaurantRepository;
+
 public class EditRestaurantActivity extends AppCompatActivity {
+
+    private int position;
+    private Restaurant restaurant;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,53 +26,62 @@ public class EditRestaurantActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_edit_restaurant);
 
-
-        // Get references to input fields and button
         EditText nameEditText = findViewById(R.id.input_name);
         EditText addressEditText = findViewById(R.id.input_address);
         EditText phoneEditText = findViewById(R.id.input_phone);
         EditText descriptionEditText = findViewById(R.id.input_description);
         EditText tagsEditText = findViewById(R.id.input_tags);
         Button saveButton = findViewById(R.id.save_button);
+        Button cancelButton = findViewById(R.id.cancel_button);
 
-
-        // Intent that retrieves the restaurant details from the details activity
         Intent intent = getIntent();
-        String currentName = intent.getStringExtra("restaurantName");
-        String currentAddress = intent.getStringExtra("restaurantAddress");
-        String currentPhone = intent.getStringExtra("restaurantPhone");
-        String currentDescription = intent.getStringExtra("restaurantDescription");
-        String currentTags = intent.getStringExtra("restaurantTags");
+        restaurant = Restaurant.fromIntent(intent);
+        position = intent.getIntExtra("restaurantPosition", -1);
 
-
-        // Set fields with current details
-        nameEditText.setText(currentName);
-        addressEditText.setText(currentAddress);
-        phoneEditText.setText(currentPhone);
-        descriptionEditText.setText(currentDescription);
-        tagsEditText.setText(currentTags);
+        if (restaurant != null) {
+            nameEditText.setText(restaurant.getName());
+            addressEditText.setText(restaurant.getAddress());
+            phoneEditText.setText(restaurant.getPhone());
+            descriptionEditText.setText(restaurant.getDescription());
+            tagsEditText.setText(restaurant.getTags());
+        }
 
         saveButton.setOnClickListener(v -> {
 
+            String updatedName = nameEditText.getText().toString().trim();
+            String updatedAddress = addressEditText.getText().toString().trim();
+            String updatedPhone = phoneEditText.getText().toString().trim();
+            String updatedDescription = descriptionEditText.getText().toString().trim();
+            String updatedTags = tagsEditText.getText().toString().trim();
 
-            // Get updated details from the input fields
-            String updatedName = nameEditText.getText().toString();
-            String updatedAddress = addressEditText.getText().toString();
-            String updatedPhone = phoneEditText.getText().toString();
-            String updatedDescription = descriptionEditText.getText().toString();
-            String updatedTags = tagsEditText.getText().toString();
+            if (updatedName.isEmpty() || updatedAddress.isEmpty()) {
+                Toast.makeText(this, "Name and Address are required", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
+            if (position != -1 && restaurant != null) {
+                restaurant.setName(updatedName);
+                restaurant.setAddress(updatedAddress);
+                restaurant.setPhone(updatedPhone);
+                restaurant.setDescription(updatedDescription);
+                restaurant.setTags(updatedTags);
 
-            // Intent that passes updated details back to RestaurantDetailsActivity.
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra("restaurantName", updatedName);
-            resultIntent.putExtra("restaurantAddress", updatedAddress);
-            resultIntent.putExtra("restaurantPhone", updatedPhone);
-            resultIntent.putExtra("restaurantDescription", updatedDescription);
-            resultIntent.putExtra("restaurantTags", updatedTags);
-            setResult(RESULT_OK, resultIntent);
-            finish(); // Closes EditRestaurantActivity and returns to previous activity
+                RestaurantRepository.getInstance().updateRestaurant(position, restaurant);
 
+                Intent resultIntent = new Intent();
+                restaurant.toIntent(resultIntent);
+                resultIntent.putExtra("restaurantPosition", position);
+                setResult(RESULT_OK, resultIntent);
+                Toast.makeText(this, "Restaurant updated", Toast.LENGTH_SHORT).show();
+                finish();
+            } else {
+                Toast.makeText(this, "Error: Invalid position", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
+        cancelButton.setOnClickListener(v -> {
+            finish();
         });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {

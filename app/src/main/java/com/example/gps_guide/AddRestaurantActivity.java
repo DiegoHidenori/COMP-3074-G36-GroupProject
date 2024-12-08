@@ -4,12 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.example.gps_guide.data.RestaurantRepository;
 
 public class AddRestaurantActivity extends AppCompatActivity {
 
@@ -20,36 +23,57 @@ public class AddRestaurantActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_add_restaurant);
 
-
-        // Get the data form the xml file.
         EditText nameEditText = findViewById(R.id.input_name);
         EditText addressEditText = findViewById(R.id.input_address);
         EditText phoneEditText = findViewById(R.id.input_phone);
         EditText descriptionEditText = findViewById(R.id.input_description);
         EditText tagsEditText = findViewById(R.id.input_tags);
+        EditText latitudeEditText = findViewById(R.id.input_latitude);
+        EditText longitudeEditText = findViewById(R.id.input_longitude);
         Button saveButton = findViewById(R.id.save_button);
+        Button backButton = findViewById(R.id.back_button);
 
         saveButton.setOnClickListener(v -> {
 
+            String name = nameEditText.getText().toString().trim();
+            String address = addressEditText.getText().toString().trim();
+            String phone = phoneEditText.getText().toString().trim();
+            String description = descriptionEditText.getText().toString().trim();
+            String tags = tagsEditText.getText().toString().trim();
+            String latitudeString = latitudeEditText.getText().toString().trim();
+            String longitudeString = longitudeEditText.getText().toString().trim();
 
-            // Get user inputs
-            String name = nameEditText.getText().toString();
-            String address = addressEditText.getText().toString();
-            String phone = phoneEditText.getText().toString();
-            String description = descriptionEditText.getText().toString();
-            String tags = tagsEditText.getText().toString();
+            if (name.isEmpty() || address.isEmpty()) {
+                Toast.makeText(this, "Name and Address are required", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
+            double latitude = 0.0;
+            double longitude = 0.0;
+            try {
+                latitude = Double.parseDouble(latitudeString);
+                longitude = Double.parseDouble(longitudeString);
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, "Invalid latitude or longitude", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-            // Intent to pass data back to RestaurantListActivity.
+            Restaurant newRestaurant = new Restaurant(
+                    name, address, phone, description, tags, 0, latitude, longitude
+            );
+
+            RestaurantRepository.getInstance().addRestaurant(newRestaurant);
+
             Intent resultIntent = new Intent();
-            resultIntent.putExtra("restaurantName", name);
-            resultIntent.putExtra("restaurantAddress", address);
-            resultIntent.putExtra("restaurantPhone", phone);
-            resultIntent.putExtra("restaurantDescription", description);
-            resultIntent.putExtra("restaurantTags", tags);
+            newRestaurant.toIntent(resultIntent);
             setResult(RESULT_OK, resultIntent);
-            finish(); // Closes this activity and returns to the list.
+            Toast.makeText(this, "Restaurant added", Toast.LENGTH_SHORT).show();
+            finish();
 
+        });
+
+        backButton.setOnClickListener(v -> {
+            finish();
         });
 
 

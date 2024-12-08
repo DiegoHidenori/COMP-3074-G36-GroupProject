@@ -5,34 +5,44 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@android:color/white"
     tools:context=".RestaurantDetailsActivity">
-
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@drawable/rounded_background">
 
         <TextView
             android:id="@+id/detail_name"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="Restaurant Name"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:paddingBottom="8dp" />
+            android:textColor="?attr/colorPrimary"
+            android:gravity="center"
+            android:paddingBottom="16dp" />
 
         <TextView
             android:id="@+id/detail_address"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="123 Main Street, City"
             android:textSize="16sp"
-            android:paddingBottom="8dp" />
+            android:paddingBottom="8dp"
+            android:textColor="@android:color/darker_gray" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Rate this: "
-            android:layout_gravity="center_horizontal" />
+            android:text="Rate this Restaurant:"
+            android:textSize="18sp"
+            android:gravity="center_horizontal"
+            android:paddingBottom="8dp" />
 
         <RatingBar
             android:id="@+id/rating_bar"
@@ -41,68 +51,92 @@
             android:numStars="5"
             android:stepSize="1"
             android:rating="0"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:paddingBottom="16dp" />
 
         <TextView
             android:id="@+id/detail_phone"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="Phone: (123) 456-7890"
             android:textSize="16sp"
             android:paddingBottom="8dp" />
 
         <TextView
             android:id="@+id/detail_description"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="Description of the restaurant..."
             android:textSize="16sp"
             android:paddingBottom="8dp" />
 
         <TextView
             android:id="@+id/detail_tags"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="Tags: Italian, Family, Casual"
             android:textSize="16sp"
-            android:textColor="@android:color/holo_blue_dark" />
+            android:textColor="?attr/colorAccent"
+            android:paddingBottom="16dp" />
 
         <com.google.android.gms.maps.MapView
             android:id="@+id/map_view"
             android:layout_width="match_parent"
-            android:layout_height="150dp" />
+            android:layout_height="200dp"
+            android:layout_marginBottom="16dp" />
 
-        <Button
-            android:id="@+id/view_full_map_btn"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Full Map" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="16dp">
 
-        <Button
-            android:id="@+id/directions_btn"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Get Directions" />
+            <Button
+                android:id="@+id/view_full_map_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Full Map"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="?attr/colorPrimary"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/directions_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Get Directions"
+                android:backgroundTint="?attr/colorPrimary"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/go_to_list_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Back to list"
-            android:layout_gravity="center"/>
+            android:text="Back to List"
+            android:backgroundTint="@android:color/darker_gray"
+            android:textColor="@android:color/white"
+            android:paddingVertical="12dp"
+            android:layout_marginBottom="8dp" />
 
         <Button
             android:id="@+id/edit_button"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Edit"
-            android:layout_gravity="center_horizontal" />
+            android:backgroundTint="?attr/colorAccent"
+            android:textColor="@android:color/white"
+            android:paddingVertical="12dp"
+            android:layout_marginBottom="8dp" />
 
         <Button
             android:id="@+id/delete_button"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Delete"
-            android:layout_gravity="center" />
-
+            android:backgroundTint="@android:color/holo_red_dark"
+            android:textColor="@android:color/white"
+            android:paddingVertical="12dp" />
     </LinearLayout>
-
-
 </ScrollView>

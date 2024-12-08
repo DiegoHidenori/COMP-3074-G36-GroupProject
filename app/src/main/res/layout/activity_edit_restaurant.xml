@@ -5,55 +5,92 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@android:color/white"
     tools:context=".EditRestaurantActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@drawable/rounded_background">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Edit Restaurant"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="?attr/colorPrimary"
+            android:gravity="center"
+            android:paddingBottom="16dp" />
 
         <EditText
             android:id="@+id/input_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Restaurant Name"
-            android:layout_marginBottom="8dp" />
+            android:padding="12dp"
+            android:background="@drawable/edittext_background"
+            android:layout_marginBottom="12dp" />
 
         <EditText
             android:id="@+id/input_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Address"
-            android:layout_marginBottom="8dp" />
+            android:padding="12dp"
+            android:background="@drawable/edittext_background"
+            android:layout_marginBottom="12dp" />
 
         <EditText
             android:id="@+id/input_phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Phone"
-            android:layout_marginBottom="8dp" />
+            android:inputType="phone"
+            android:padding="12dp"
+            android:background="@drawable/edittext_background"
+            android:layout_marginBottom="12dp" />
 
         <EditText
             android:id="@+id/input_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Description"
-            android:layout_marginBottom="8dp" />
+            android:padding="12dp"
+            android:background="@drawable/edittext_background"
+            android:layout_marginBottom="12dp" />
 
         <EditText
             android:id="@+id/input_tags"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Tags (comma-separated)"
-            android:layout_marginBottom="8dp" />
+            android:padding="12dp"
+            android:background="@drawable/edittext_background"
+            android:layout_marginBottom="16dp" />
 
         <Button
             android:id="@+id/save_button"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Save"
-            android:layout_gravity="center_horizontal" />
+            android:text="Save Changes"
+            android:textColor="@android:color/white"
+            android:backgroundTint="?attr/colorAccent"
+            android:paddingVertical="12dp"
+            android:elevation="4dp"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/cancel_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@android:color/darker_gray"
+            android:paddingVertical="12dp"
+            android:elevation="4dp" />
     </LinearLayout>
-
-
 </ScrollView>

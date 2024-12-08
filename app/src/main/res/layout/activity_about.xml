@@ -5,23 +5,47 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AboutActivity"
-    android:orientation="vertical">
+    android:padding="16dp"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".AboutActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Diego Tsukayama 101472085" />
+        android:text="About Us"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="?attr/colorPrimary"
+        android:gravity="center"
+        android:layout_marginBottom="24dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Illia Konik 101460488" />
+        android:text="Diego Tsukayama - 101472085"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"
+        android:textColor="@android:color/darker_gray" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Illia Konik - 101460488"
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp"
+        android:textColor="@android:color/darker_gray" />
 
     <Button
         android:id="@+id/go_back_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Go Back" />
-
+        android:text="Go Back"
+        android:backgroundTint="?attr/colorPrimary"
+        android:textColor="@android:color/white"
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="12dp"
+        android:elevation="4dp"
+        android:layout_gravity="center_horizontal" />
 </LinearLayout>

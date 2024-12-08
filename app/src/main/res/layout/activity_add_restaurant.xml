@@ -5,54 +5,115 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:padding="16dp"
+    android:scrollbars="none"
     tools:context=".AddRestaurantActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@drawable/rounded_background">
+
+        <TextView
+            android:id="@+id/add_restaurant_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Restaurant"
+            android:textSize="24sp"
+            android:textColor="?attr/colorPrimary"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="16dp" />
 
         <EditText
             android:id="@+id/input_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Restaurant Name"
-            android:layout_marginBottom="8dp" />
+            android:padding="12dp"
+            android:background="@drawable/edittext_background"
+            android:layout_marginBottom="12dp" />
 
         <EditText
             android:id="@+id/input_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Address"
-            android:layout_marginBottom="8dp" />
+            android:padding="12dp"
+            android:background="@drawable/edittext_background"
+            android:layout_marginBottom="12dp" />
 
         <EditText
             android:id="@+id/input_phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Phone"
-            android:layout_marginBottom="8dp" />
+            android:inputType="phone"
+            android:padding="12dp"
+            android:background="@drawable/edittext_background"
+            android:layout_marginBottom="12dp" />
 
         <EditText
             android:id="@+id/input_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Description"
-            android:layout_marginBottom="8dp" />
+            android:padding="12dp"
+            android:background="@drawable/edittext_background"
+            android:layout_marginBottom="12dp" />
 
         <EditText
             android:id="@+id/input_tags"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Tags (comma-separated)"
-            android:layout_marginBottom="8dp" />
+            android:padding="12dp"
+            android:background="@drawable/edittext_background"
+            android:layout_marginBottom="12dp" />
+
+        <EditText
+            android:id="@+id/input_latitude"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Latitude"
+            android:inputType="numberDecimal"
+            android:padding="12dp"
+            android:background="@drawable/edittext_background"
+            android:layout_marginBottom="12dp" />
+
+        <EditText
+            android:id="@+id/input_longitude"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Longitude"
+            android:inputType="numberDecimal"
+            android:padding="12dp"
+            android:background="@drawable/edittext_background"
+            android:layout_marginBottom="16dp" />
 
         <Button
             android:id="@+id/save_button"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Save"
-            android:layout_gravity="center_horizontal" />
+            android:textColor="@android:color/white"
+            android:backgroundTint="?attr/colorAccent"
+            android:paddingVertical="12dp"
+            android:elevation="4dp" />
+
+        <Button
+            android:id="@+id/back_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:textColor="@android:color/white"
+            android:backgroundTint="?attr/colorAccent"
+            android:paddingVertical="12dp"
+            android:elevation="4dp" />
+
     </LinearLayout>
 
 </ScrollView>

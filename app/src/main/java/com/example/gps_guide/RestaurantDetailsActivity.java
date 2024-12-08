@@ -14,6 +14,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.gps_guide.data.RestaurantRepository;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -25,14 +26,13 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
 
     private static final int EDIT_REQUEST_CODE = 2;
 
-    private TextView nameTextView, addressTextView,
-            phoneTextView, descriptionTextView, tagsTextView;
+    private TextView nameTextView, addressTextView, phoneTextView, descriptionTextView, tagsTextView;
     private RatingBar ratingBar;
     private float currentRating;
     private MapView mapView;
     private GoogleMap googleMap;
-    private double latitude;
-    private double longitude;
+    private Restaurant restaurant;
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,134 +41,81 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_restaurant_details);
 
-
-        // Retrieve the passed data from RestaurantListActivity.
         Intent intent = getIntent();
-        String name = intent.getStringExtra("restaurantName");
-        String address = intent.getStringExtra("restaurantAddress");
-        String phone = intent.getStringExtra("restaurantPhone");
-        String description = intent.getStringExtra("restaurantDescription");
-        String tags = intent.getStringExtra("restaurantTags");
-        int position = intent.getIntExtra("restaurantPosition", -1);
-        currentRating = intent.getFloatExtra("restaurantRating", 0);
-        latitude = intent.getDoubleExtra("restaurantLatitude", 0.0);
-        longitude = intent.getDoubleExtra("restaurantLongitude", 0.0);
+        restaurant = Restaurant.fromIntent(intent);
+        position = intent.getIntExtra("restaurantPosition", -1);
 
-        mapView = findViewById(R.id.map_view);
-        mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(googleMap -> {
-            this.googleMap = googleMap;
-            MapsInitializer.initialize(this);
-
-
-            // Marker for the location
-            LatLng restaurantLocation = new LatLng(latitude, longitude);
-            googleMap.addMarker(new MarkerOptions().position(restaurantLocation).title(name));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(restaurantLocation, 15));
-
-        });
-
-
-        // Texts from the RestaurantDetailsActivity.
         nameTextView = findViewById(R.id.detail_name);
         addressTextView = findViewById(R.id.detail_address);
         phoneTextView = findViewById(R.id.detail_phone);
         descriptionTextView = findViewById(R.id.detail_description);
         tagsTextView = findViewById(R.id.detail_tags);
         ratingBar = findViewById(R.id.rating_bar);
+        mapView = findViewById(R.id.map_view);
 
-        nameTextView.setText(name);
-        addressTextView.setText(address);
-        phoneTextView.setText(phone);
-        descriptionTextView.setText(description);
-        tagsTextView.setText(tags);
-        ratingBar.setRating(currentRating);
+        populateFields();
 
         ratingBar.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
-
             if (fromUser) {
-
                 currentRating = rating;
-
+                restaurant.setRating(rating);
+                if (position != -1) {
+                    RestaurantRepository.getInstance().updateRestaurant(position, restaurant);
+                }
             }
-
         });
 
-        Button btn = findViewById(R.id.go_to_list_btn);
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync(googleMap -> {
+            this.googleMap = googleMap;
+            MapsInitializer.initialize(this);
+            LatLng restaurantLocation = new LatLng(restaurant.getLatitude(), restaurant.getLongitude());
+            googleMap.addMarker(new MarkerOptions().position(restaurantLocation).title(restaurant.getName()));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(restaurantLocation, 15));
+        });
 
-        btn.setOnClickListener(view -> {
-
-
-            // To pass rating to the RestaurantListActivity.
+        Button goToListButton = findViewById(R.id.go_to_list_btn);
+        goToListButton.setOnClickListener(view -> {
             Intent resultIntent = new Intent();
-            resultIntent.putExtra("restaurantName", nameTextView.getText().toString());
-            resultIntent.putExtra("restaurantAddress", addressTextView.getText().toString());
-            resultIntent.putExtra("restaurantPhone", phoneTextView.getText().toString());
-            resultIntent.putExtra("restaurantDescription", descriptionTextView.getText().toString());
-            resultIntent.putExtra("restaurantTags", tagsTextView.getText().toString());
-            resultIntent.putExtra("restaurantRating", ratingBar.getRating());
-            resultIntent.putExtra("restaurantPosition",
-                    getIntent().getIntExtra("restaurantPosition", -1));
+            restaurant.toIntent(resultIntent);
+            resultIntent.putExtra("restaurantPosition", position);
             setResult(RESULT_OK, resultIntent);
-
-
-            // finish() method ends the current activity and removes it from the stack. It then
-            // goes to the next activity on top of the stack (Android manages stack of activities).
             finish();
-
         });
 
-        Button editBtn = findViewById(R.id.edit_button);
-
-        editBtn.setOnClickListener(v -> {
-
-            Intent editIntent = new Intent(RestaurantDetailsActivity.this,
-                    EditRestaurantActivity.class);
-
-
-            // Intent to pass restaurant details to the EditRestaurantActivity.
-            editIntent.putExtra("restaurantName", nameTextView.getText().toString());
-            editIntent.putExtra("restaurantAddress", addressTextView.getText().toString());
-            editIntent.putExtra("restaurantPhone", phoneTextView.getText().toString());
-            editIntent.putExtra("restaurantDescription",
-                    descriptionTextView.getText().toString());
-            editIntent.putExtra("restaurantTags", tagsTextView.getText().toString());
+        Button editButton = findViewById(R.id.edit_button);
+        editButton.setOnClickListener(view -> {
+            Intent editIntent = new Intent(RestaurantDetailsActivity.this, EditRestaurantActivity.class);
+            restaurant.toIntent(editIntent);
+            editIntent.putExtra("restaurantPosition", position);
             startActivityForResult(editIntent, EDIT_REQUEST_CODE);
-
         });
 
-        Button deleteBtn = findViewById(R.id.delete_button);
-
-        deleteBtn.setOnClickListener(view -> {
-
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra("deletePosition", position);
-            setResult(RESULT_OK, resultIntent);
-            finish();
-
+        Button deleteButton = findViewById(R.id.delete_button);
+        deleteButton.setOnClickListener(view -> {
+            if (position != -1) {
+                RestaurantRepository.getInstance().deleteRestaurant(position);
+                Toast.makeText(this, "Restaurant deleted", Toast.LENGTH_SHORT).show();
+                setResult(RESULT_OK);
+                finish();
+            }
         });
 
         Button fullMapButton = findViewById(R.id.view_full_map_btn);
-
         fullMapButton.setOnClickListener(v -> {
 
             Intent mapIntent = new Intent(RestaurantDetailsActivity.this, FullMapActivity.class);
-            mapIntent.putExtra("restaurantLatitude", latitude);
-            mapIntent.putExtra("restaurantLongitude", longitude);
-            mapIntent.putExtra("restaurantName", nameTextView.getText().toString());
+            mapIntent.putExtra("restaurantLatitude", restaurant.getLatitude());
+            mapIntent.putExtra("restaurantLongitude", restaurant.getLongitude());
+            mapIntent.putExtra("restaurantName", restaurant.getName());
             startActivity(mapIntent);
 
         });
 
         Button directionsButton = findViewById(R.id.directions_btn);
-
         directionsButton.setOnClickListener(v -> {
 
-            double latitude = getIntent().getDoubleExtra("restaurantLatitude",
-                    0.0);
-            double longitude = getIntent().getDoubleExtra("restaurantLongitude",
-                    0.0);
-            String uri = String.format("google.navigation:q=%f,%f", latitude, longitude);
+            String uri = String.format("google.navigation:q=%f,%f", restaurant.getLatitude(), restaurant.getLongitude());
             Intent directionsIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
             directionsIntent.setPackage("com.google.android.apps.maps");
 
@@ -190,37 +137,24 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         });
     }
 
+    private void populateFields() {
+        nameTextView.setText(restaurant.getName());
+        addressTextView.setText(restaurant.getAddress());
+        phoneTextView.setText(restaurant.getPhone());
+        descriptionTextView.setText(restaurant.getDescription());
+        tagsTextView.setText(restaurant.getTags());
+        ratingBar.setRating(restaurant.getRating());
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == EDIT_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-
-            String updatedName = data.getStringExtra("restaurantName");
-            String updatedAddress = data.getStringExtra("restaurantAddress");
-            String updatedPhone = data.getStringExtra("restaurantPhone");
-            String updatedDescription = data.getStringExtra("restaurantDescription");
-            String updatedTags = data.getStringExtra("restaurantTags");
-
-            nameTextView.setText(updatedName);
-            addressTextView.setText(updatedAddress);
-            phoneTextView.setText(updatedPhone);
-            descriptionTextView.setText(updatedDescription);
-            tagsTextView.setText(updatedTags);
-
-
-            // Pass updated details back to the RestaurantListActivity.
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra("restaurantName", updatedName);
-            resultIntent.putExtra("restaurantAddress", updatedAddress);
-            resultIntent.putExtra("restaurantPhone", updatedPhone);
-            resultIntent.putExtra("restaurantDescription", updatedDescription);
-            resultIntent.putExtra("restaurantTags", updatedTags);
-            resultIntent.putExtra("restaurantPosition", getIntent()
-                    .getIntExtra("restaurantPosition", -1)); // Pass position
-            setResult(RESULT_OK, resultIntent);
-
+            restaurant = Restaurant.fromIntent(data);
+            populateFields();
+            if (position != -1) {
+                RestaurantRepository.getInstance().updateRestaurant(position, restaurant);
+            }
         }
     }
 
